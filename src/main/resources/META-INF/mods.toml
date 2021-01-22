@@ -25,16 +25,16 @@ displayName="Portable Jukebox" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/portable-jukebox-forge" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="portable_jukebox_icon.png" #optional
+logoFile="assets/portablejukebox/icon.png" #optional
 # A text field displayed in the mod UI
 credits="" #optional
 # A text field displayed in the mod UI
 authors="Will BL" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Just the Portable Jukebox and Noteblock from Essential Features
+Just the Portable Jukebox and Note Block from Essential Features.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.portablejukebox]] #optional
