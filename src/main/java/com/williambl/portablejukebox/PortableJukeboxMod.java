@@ -37,7 +37,7 @@ public class PortableJukeboxMod
             () -> new PortableNoteBlockItem(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC))
     );
 
-    public static final RegistryObject<IRecipeSerializer<?>> PORTABLE_JUKEBOX_LOAD = RECIPE_SERIALIZER_DEFERRED_REGISTER.register("portable_jukebox",
+    public static final RegistryObject<IRecipeSerializer<?>> PORTABLE_JUKEBOX_LOAD = RECIPE_SERIALIZER_DEFERRED_REGISTER.register("crafting_special_portable_jukebox_load",
             () -> new SpecialRecipeSerializer<>(PortableJukeboxLoadRecipe::new)
     );
 
