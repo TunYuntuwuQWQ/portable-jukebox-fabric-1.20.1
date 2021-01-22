@@ -12,6 +12,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,13 +71,20 @@ public class PortableJukeboxItem extends Item {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
         if (this.isInGroup(group)) {
             items.add(new ItemStack(this));
             items.addAll(getJukeboxes());
         }
     }
 
+    @Override
+    public boolean onDroppedByPlayer(ItemStack stack, PlayerEntity player) {
+        if (!player.world.isRemote) {
+            PortableJukeboxMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PortableJukeboxMessage(false, player.getUniqueID(), ItemStack.read(stack.getOrCreateChildTag("Disc")).getItem().getRegistryName()));
+        }
+        return true;
+    }
 
     private List<ItemStack> getJukeboxes() {
         if (jukeboxes == null) {
