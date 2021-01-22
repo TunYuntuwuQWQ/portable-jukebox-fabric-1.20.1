@@ -8,8 +8,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.TableLootEntry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -20,6 +24,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.List;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("portablejukebox")
@@ -50,11 +57,22 @@ public class PortableJukeboxMod
             PROTOCOL_VERSION::equals
     );
 
+    private static final List<ResourceLocation> JUKEBOX_LOOT_TABLES = Arrays.asList(
+            LootTables.CHESTS_DESERT_PYRAMID,
+            LootTables.CHESTS_ABANDONED_MINESHAFT,
+            LootTables.CHESTS_JUNGLE_TEMPLE,
+            LootTables.CHESTS_SIMPLE_DUNGEON,
+            LootTables.CHESTS_NETHER_BRIDGE,
+            LootTables.CHESTS_IGLOO_CHEST
+    );
+
+    private static final TableLootEntry.Builder<?> entry = TableLootEntry.builder(new ResourceLocation("portablejukebox:inject/loot_chests")).weight(10);
+
     public PortableJukeboxMod() {
         ITEM_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
         RECIPE_SERIALIZER_DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.addListener(this::lootTableInject);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -66,5 +84,11 @@ public class PortableJukeboxMod
                 PortableJukeboxMessage::new,
                 PortableJukeboxMessage::handle
         );
+    }
+
+    private void lootTableInject(final LootTableLoadEvent event) {
+        if (JUKEBOX_LOOT_TABLES.contains(event.getName())) {
+            event.getTable().addPool(LootPool.builder().addEntry(entry).name("portablejukebox_injected").build());
+        }
     }
 }
