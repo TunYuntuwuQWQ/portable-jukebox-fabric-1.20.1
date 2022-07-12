@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[41,)"
+license="MIT"
+[[mods]]
+modId="portablejukebox"
+version="${file.jarVersion}"
+displayName="Portable Jukebox"
+updateJSONURL="https://raw.githubusercontent.com/williambl/portable-jukebox/master/update.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/portable-jukebox"
+logoFile="assets/portablejukebox/icon.png"
+credits=""
+authors="Will BL"
+description='''
+Adds a portable jukebox and note block.
+'''
+[[dependencies.portablejukebox]]
+    modId="forge"
+    mandatory=true
+    versionRange="[41.0.94,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.portablejukebox]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19,1.20)"
+    ordering="NONE"
+    side="BOTH"
