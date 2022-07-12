@@ -9,7 +9,7 @@ import net.minecraft.world.item.RecordItem;
 
 import java.util.Objects;
 
-public class DistHelper {
+public class ClientUtils {
 
     public static void playDiscToPlayer(int id, ResourceLocation disc) {
         Minecraft.getInstance().getSoundManager().stop();
