@@ -42,6 +42,6 @@ public class ForgeMessageSender implements IMessageSender {
 
     @Override
     public void sendMessage(PortableJukeboxMessage message, Entity tracking) {
-        CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> tracking), message);
+        CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> tracking), message);
     }
 }

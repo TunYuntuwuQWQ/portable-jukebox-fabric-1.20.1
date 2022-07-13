@@ -17,5 +17,9 @@ public class FabricMessageSender implements IMessageSender {
         for (var player : PlayerLookup.tracking(tracking)) {
             ServerPlayNetworking.send(player, PortableJukeboxMessage.MESSAGE_ID, buf);
         }
+
+        if (tracking instanceof ServerPlayer player) {
+            ServerPlayNetworking.send(player, PortableJukeboxMessage.MESSAGE_ID, buf);
+        }
     }
 }
