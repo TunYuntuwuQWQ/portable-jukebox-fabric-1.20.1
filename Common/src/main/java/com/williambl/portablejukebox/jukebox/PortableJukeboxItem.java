@@ -80,13 +80,16 @@ public class PortableJukeboxItem extends Item {
         }
     }
 
-    /*@Override
+    //Overrides on Forge
     public boolean onDroppedByPlayer(ItemStack stack, Player player) {
         if (!player.level.isClientSide()) {
-            //PortableJukeboxMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PortableJukeboxMessage(false, player.getUniqueID(), ItemStack.read(stack.getOrCreateChildTag("Disc")).getItem().getRegistryName()));
+            ItemStack discStack = ItemStack.of(stack.getOrCreateTagElement("Disc"));
+            if (discStack.getItem() instanceof RecordItem item) {
+                Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(item)), player);
+            }
         }
         return true;
-    }*/
+    }
 
     private List<ItemStack> getJukeboxes() {
         if (this.jukeboxes == null || this.jukeboxes.isEmpty()) {
