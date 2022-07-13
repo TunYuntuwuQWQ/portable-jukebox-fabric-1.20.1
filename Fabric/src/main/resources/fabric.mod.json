@@ -21,6 +21,9 @@
     "entrypoints": {
       "main": [
         "com.williambl.portablejukebox.PortableJukeboxMod"
+      ],
+      "client": [
+        "com.williambl.portablejukebox.client.PortableJukeboxModClient"
       ]
     },
     "mixins": [

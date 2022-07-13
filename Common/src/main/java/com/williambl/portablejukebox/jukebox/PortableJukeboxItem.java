@@ -1,5 +1,7 @@
 package com.williambl.portablejukebox.jukebox;
 
+import com.williambl.portablejukebox.platform.Services;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -34,8 +36,9 @@ public class PortableJukeboxItem extends Item {
         CompoundTag tag = stack.getOrCreateTagElement("Disc");
         Item discItem = ItemStack.of(tag).getItem();
 
-        if (!(discItem instanceof RecordItem disc))
+        if (!(discItem instanceof RecordItem disc)) {
             return InteractionResultHolder.pass(stack);
+        }
 
         if (player.isCrouching()) {
             stack.removeTagKey("Disc");
@@ -43,15 +46,16 @@ public class PortableJukeboxItem extends Item {
             player.addItem(new ItemStack(disc));
 
             if (!world.isClientSide()) {
-                //PortableJukeboxMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PortableJukeboxMessage(false, player.getUniqueID(), disc.getRegistryName()));
+                Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(disc)), player);
             }
 
             return InteractionResultHolder.success(stack);
         }
 
         if (!world.isClientSide()) {
-            //PortableJukeboxMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new PortableJukeboxMessage(true, player.getUniqueID(), disc.getRegistryName()));
+            Services.MESSAGES.sendMessage(new PortableJukeboxMessage(true, player.getId(), Registry.ITEM.getId(disc)), player);
         }
+
         return InteractionResultHolder.success(stack);
     }
 
@@ -61,10 +65,10 @@ public class PortableJukeboxItem extends Item {
 
         ItemStack discStack = ItemStack.of(tag);
 
-        if (discStack.getItem() != Items.AIR) {
-            tooltip.add(Component.literal("Disc: ").append(discStack.getItem().getDescription()));
+        if (discStack.getItem() instanceof RecordItem recordItem) {
+            tooltip.add(Component.literal("Disc: ").append(recordItem.getDisplayName()).withStyle(ChatFormatting.GRAY));
         } else {
-            tooltip.add(Component.literal("Empty"));
+            tooltip.add(Component.literal("Empty").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -91,9 +95,9 @@ public class PortableJukeboxItem extends Item {
                     .filter(it -> it instanceof RecordItem)
                     .map(it -> it.getDefaultInstance().save(new CompoundTag()))
                     .forEach(nbt -> {
-                        /*ItemStack stack = new ItemStack(PortableJukeboxMod.PORTABLE_JUKEBOX.get());
+                        ItemStack stack = new ItemStack(Services.REGISTRY.portableJukeboxItem().get());
                         stack.getOrCreateTag().put("Disc", nbt);
-                        jukeboxes.add(stack);*/
+                        this.jukeboxes.add(stack);
                     });
         }
         return this.jukeboxes;
