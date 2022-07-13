@@ -43,7 +43,12 @@ public class PortableJukeboxItem extends Item {
         if (player.isCrouching()) {
             stack.removeTagKey("Disc");
             stack.getOrCreateTag().put("Disc", ItemStack.EMPTY.save(new CompoundTag()));
-            player.addItem(new ItemStack(disc));
+            var discStack = disc.getDefaultInstance();
+            if (player.canTakeItem(discStack)) {
+                player.addItem(discStack);
+            } else {
+                player.drop(discStack, true);
+            }
 
             if (!world.isClientSide()) {
                 Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(disc)), player);
