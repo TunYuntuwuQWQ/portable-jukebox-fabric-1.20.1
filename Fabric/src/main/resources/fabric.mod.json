@@ -1,0 +1,41 @@
+{
+    "schemaVersion": 1,
+    "id": "portablejukebox",
+    "version": "${version}",
+  
+    "name": "Portable Jukebox",
+    "description": "Adds a portable jukebox and note block.",
+    "authors": [
+      "Will BL"
+    ],
+    "contact": {
+      "homepage": "https://www.curseforge.com/minecraft/mc-mods/portable-jukebox",
+      "sources": "https://github.com/williambl/portable-jukebox",
+      "issues": "https://github.com/williambl/portable-jukebox/issues"
+    },
+  
+    "license": "MIT",
+    "icon": "assets/portablejukebox/icon.png",
+  
+    "environment": "*",
+    "entrypoints": {
+      "main": [
+        "com.williambl.portablejukebox.PortableJukeboxMod"
+      ],
+      "client": [
+        "com.williambl.portablejukebox.client.PortableJukeboxModClient"
+      ]
+    },
+    "mixins": [
+      "portablejukebox_fabric.mixins.json",
+      "portablejukebox_common.mixins.json"
+    ],
+  
+    "depends": {
+      "fabricloader": ">=0.14",
+      "fabric": "*",
+      "minecraft": "1.19.x",
+      "java": ">=17"
+    }
+  }
+  
