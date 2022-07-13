@@ -13,9 +13,9 @@ import static com.williambl.portablejukebox.PortableJukeboxCommon.id;
 
 public class PortableJukeboxMod implements ModInitializer {
 
-    public static SimpleRecipeSerializer<PortableJukeboxLoadRecipe> PORTABLE_JUKEBOX_LOAD_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, id("portable_jukebox_load"), new SimpleRecipeSerializer<>(PortableJukeboxLoadRecipe::new));
-    public static PortableJukeboxItem PORTABLE_JUKEBOX = Registry.register(Registry.ITEM, id("portable_jukebox"), new PortableJukeboxItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1)));
-    public static PortableNoteBlockItem PORTABLE_NOTE_BLOCK = Registry.register(Registry.ITEM, id("portable_note_block"), new PortableNoteBlockItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1)));
+    public static SimpleRecipeSerializer<PortableJukeboxLoadRecipe> PORTABLE_JUKEBOX_LOAD_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, id("portable_jukebox_load"), PortableJukeboxCommon.createPortableJukeboxLoadRecipeSerializer());
+    public static PortableJukeboxItem PORTABLE_JUKEBOX = Registry.register(Registry.ITEM, id("portable_jukebox"), PortableJukeboxCommon.createPortableJukeboxItem());
+    public static PortableNoteBlockItem PORTABLE_NOTE_BLOCK = Registry.register(Registry.ITEM, id("portable_note_block"), PortableJukeboxCommon.createPortableNoteBlockItem());
 
     @Override
     public void onInitialize() {
