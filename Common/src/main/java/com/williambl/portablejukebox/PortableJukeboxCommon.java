@@ -22,11 +22,11 @@ public class PortableJukeboxCommon {
     }
 
     public static PortableJukeboxItem createPortableJukeboxItem() {
-        return new PortableJukeboxItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1));
+        return new PortableJukeboxItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1).rarity(Rarity.RARE));
     }
 
     public static PortableNoteBlockItem createPortableNoteBlockItem() {
-        return new PortableNoteBlockItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1).rarity(Rarity.RARE));
+        return new PortableNoteBlockItem(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1));
     }
 
     public static SimpleRecipeSerializer<PortableJukeboxLoadRecipe> createPortableJukeboxLoadRecipeSerializer() {
