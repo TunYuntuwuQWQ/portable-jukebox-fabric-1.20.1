@@ -4,8 +4,6 @@ import com.williambl.portablejukebox.jukebox.PortableJukeboxMessage;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
-import javax.sound.sampled.Port;
-
 public class PortableJukeboxModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
@@ -13,9 +11,9 @@ public class PortableJukeboxModClient implements ClientModInitializer {
             var message = new PortableJukeboxMessage(buf);
             client.execute(() -> {
                 if (message.startOrStop()) {
-                    ClientUtils.playDiscToPlayer(message.entityId(), message.disc());
+                    ClientUtils.playDiscToPlayer(message.entityId(), message.soundEvent());
                 } else {
-                    ClientUtils.stopDisc(message.disc());
+                    ClientUtils.stopDisc(message.soundEvent());
                 }
             });
         });

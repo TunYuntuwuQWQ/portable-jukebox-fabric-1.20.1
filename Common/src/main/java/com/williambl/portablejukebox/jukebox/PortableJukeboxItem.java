@@ -1,5 +1,6 @@
 package com.williambl.portablejukebox.jukebox;
 
+import com.williambl.portablejukebox.DiscHelper;
 import com.williambl.portablejukebox.platform.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -46,14 +47,14 @@ public class PortableJukeboxItem extends Item {
             }
 
             if (!world.isClientSide()) {
-                Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(disc)), player);
+                Services.MESSAGES.sendMessage(PortableJukeboxMessage.stop(player, DiscHelper.getSoundEvent(discStack)), player);
             }
 
             return InteractionResultHolder.success(stack);
         }
 
         if (!world.isClientSide()) {
-            Services.MESSAGES.sendMessage(new PortableJukeboxMessage(true, player.getId(), Registry.ITEM.getId(disc)), player);
+            Services.MESSAGES.sendMessage(PortableJukeboxMessage.start(player, DiscHelper.getSoundEvent(discStack)), player);
         }
 
         return InteractionResultHolder.success(stack);
@@ -61,8 +62,9 @@ public class PortableJukeboxItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        if (this.getDiscStack(stack).getItem() instanceof RecordItem recordItem) {
-            tooltip.add(Component.literal("Disc: ").append(recordItem.getDisplayName()).withStyle(ChatFormatting.GRAY));
+        var discStack = this.getDiscStack(stack);
+        if (DiscHelper.isDisc(discStack)) {
+            tooltip.add(Component.literal("Disc: ").append(DiscHelper.getName(discStack)).withStyle(ChatFormatting.GRAY));
         } else {
             tooltip.add(Component.literal("Empty").withStyle(ChatFormatting.GRAY));
         }
@@ -79,8 +81,9 @@ public class PortableJukeboxItem extends Item {
     //Overrides on Forge
     public boolean onDroppedByPlayer(ItemStack stack, Player player) {
         if (!player.level.isClientSide()) {
-            if (this.getDiscStack(stack).getItem() instanceof RecordItem item) {
-                Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(item)), player);
+            var discStack = this.getDiscStack(stack);
+            if (DiscHelper.isDisc(discStack)) {
+                Services.MESSAGES.sendMessage(PortableJukeboxMessage.stop(player, DiscHelper.getSoundEvent(discStack)), player);
             }
         }
         return true;
