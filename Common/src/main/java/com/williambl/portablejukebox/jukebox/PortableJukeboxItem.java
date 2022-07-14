@@ -19,6 +19,8 @@ import java.util.List;
 
 public class PortableJukeboxItem extends Item {
 
+    private static final String DISC_TAG_KEY = "Disc";
+
     private List<ItemStack> jukeboxes = null;
 
     public PortableJukeboxItem(Item.Properties properties) {
@@ -33,7 +35,7 @@ public class PortableJukeboxItem extends Item {
 
         ItemStack stack = player.getItemInHand(handIn);
 
-        CompoundTag tag = stack.getOrCreateTagElement("Disc");
+        CompoundTag tag = stack.getOrCreateTagElement(DISC_TAG_KEY);
         Item discItem = ItemStack.of(tag).getItem();
 
         if (!(discItem instanceof RecordItem disc)) {
@@ -41,8 +43,8 @@ public class PortableJukeboxItem extends Item {
         }
 
         if (player.isCrouching()) {
-            stack.removeTagKey("Disc");
-            stack.getOrCreateTag().put("Disc", ItemStack.EMPTY.save(new CompoundTag()));
+            stack.removeTagKey(DISC_TAG_KEY);
+            stack.getOrCreateTag().put(DISC_TAG_KEY, ItemStack.EMPTY.save(new CompoundTag()));
             var discStack = disc.getDefaultInstance();
             if (player.canTakeItem(discStack)) {
                 player.addItem(discStack);
@@ -66,7 +68,7 @@ public class PortableJukeboxItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        CompoundTag tag = stack.getOrCreateTagElement("Disc");
+        CompoundTag tag = stack.getOrCreateTagElement(DISC_TAG_KEY);
 
         ItemStack discStack = ItemStack.of(tag);
 
@@ -88,7 +90,7 @@ public class PortableJukeboxItem extends Item {
     //Overrides on Forge
     public boolean onDroppedByPlayer(ItemStack stack, Player player) {
         if (!player.level.isClientSide()) {
-            ItemStack discStack = ItemStack.of(stack.getOrCreateTagElement("Disc"));
+            ItemStack discStack = ItemStack.of(stack.getOrCreateTagElement(DISC_TAG_KEY));
             if (discStack.getItem() instanceof RecordItem item) {
                 Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(item)), player);
             }
@@ -104,7 +106,7 @@ public class PortableJukeboxItem extends Item {
                     .map(it -> it.getDefaultInstance().save(new CompoundTag()))
                     .forEach(nbt -> {
                         ItemStack stack = new ItemStack(Services.REGISTRY.portableJukeboxItem().get());
-                        stack.getOrCreateTag().put("Disc", nbt);
+                        stack.getOrCreateTag().put(DISC_TAG_KEY, nbt);
                         this.jukeboxes.add(stack);
                     });
         }
