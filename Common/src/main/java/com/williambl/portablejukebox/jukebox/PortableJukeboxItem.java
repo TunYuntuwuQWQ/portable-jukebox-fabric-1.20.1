@@ -5,6 +5,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PortableJukeboxItem extends Item {
@@ -27,25 +27,20 @@ public class PortableJukeboxItem extends Item {
         super(properties);
     }
 
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand handIn) {
 
         ItemStack stack = player.getItemInHand(handIn);
 
-        CompoundTag tag = stack.getOrCreateTagElement(DISC_TAG_KEY);
-        Item discItem = ItemStack.of(tag).getItem();
+        ItemStack discStack = this.getDiscStack(stack);
 
-        if (!(discItem instanceof RecordItem disc)) {
+        if (!(discStack.getItem() instanceof RecordItem disc)) {
             return InteractionResultHolder.pass(stack);
         }
 
         if (player.isCrouching()) {
-            stack.removeTagKey(DISC_TAG_KEY);
-            stack.getOrCreateTag().put(DISC_TAG_KEY, ItemStack.EMPTY.save(new CompoundTag()));
-            var discStack = disc.getDefaultInstance();
+            this.setDiscStack(stack, ItemStack.EMPTY);
+
             if (player.canTakeItem(discStack)) {
                 player.addItem(discStack);
             } else {
@@ -68,11 +63,7 @@ public class PortableJukeboxItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        CompoundTag tag = stack.getOrCreateTagElement(DISC_TAG_KEY);
-
-        ItemStack discStack = ItemStack.of(tag);
-
-        if (discStack.getItem() instanceof RecordItem recordItem) {
+        if (this.getDiscStack(stack).getItem() instanceof RecordItem recordItem) {
             tooltip.add(Component.literal("Disc: ").append(recordItem.getDisplayName()).withStyle(ChatFormatting.GRAY));
         } else {
             tooltip.add(Component.literal("Empty").withStyle(ChatFormatting.GRAY));
@@ -82,7 +73,7 @@ public class PortableJukeboxItem extends Item {
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab group, @Nonnull NonNullList<ItemStack> items) {
         if (this.allowedIn(group)) {
-            items.add(new ItemStack(this));
+            items.add(this.getDefaultInstance());
             items.addAll(this.getJukeboxes());
         }
     }
@@ -90,25 +81,35 @@ public class PortableJukeboxItem extends Item {
     //Overrides on Forge
     public boolean onDroppedByPlayer(ItemStack stack, Player player) {
         if (!player.level.isClientSide()) {
-            ItemStack discStack = ItemStack.of(stack.getOrCreateTagElement(DISC_TAG_KEY));
-            if (discStack.getItem() instanceof RecordItem item) {
+            if (this.getDiscStack(stack).getItem() instanceof RecordItem item) {
                 Services.MESSAGES.sendMessage(new PortableJukeboxMessage(false, player.getId(), Registry.ITEM.getId(item)), player);
             }
         }
         return true;
     }
 
+    private ItemStack getDiscStack(ItemStack stack) {
+        if (stack.getOrCreateTag().getTagType(DISC_TAG_KEY) != Tag.TAG_COMPOUND) {
+            return ItemStack.EMPTY;
+        }
+
+        return ItemStack.of(stack.getOrCreateTagElement(DISC_TAG_KEY));
+    }
+
+    private void setDiscStack(ItemStack stack, ItemStack discStack) {
+        stack.getOrCreateTag().put(DISC_TAG_KEY, discStack.save(new CompoundTag()));
+    }
+
     private List<ItemStack> getJukeboxes() {
         if (this.jukeboxes == null || this.jukeboxes.isEmpty()) {
-            this.jukeboxes = new ArrayList<>();
-            Registry.ITEM.stream()
+            this.jukeboxes = Registry.ITEM.stream()
                     .filter(it -> it instanceof RecordItem)
-                    .map(it -> it.getDefaultInstance().save(new CompoundTag()))
-                    .forEach(nbt -> {
-                        ItemStack stack = new ItemStack(Services.REGISTRY.portableJukeboxItem().get());
-                        stack.getOrCreateTag().put(DISC_TAG_KEY, nbt);
-                        this.jukeboxes.add(stack);
-                    });
+                    .map(it -> {
+                        ItemStack stack = Services.REGISTRY.portableJukeboxItem().get().getDefaultInstance();
+                        this.setDiscStack(stack, it.getDefaultInstance());
+                        return stack;
+                    })
+                    .toList();
         }
         return this.jukeboxes;
     }
