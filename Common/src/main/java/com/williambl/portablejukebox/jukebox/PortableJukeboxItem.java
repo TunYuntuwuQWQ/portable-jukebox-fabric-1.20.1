@@ -41,9 +41,7 @@ public class PortableJukeboxItem extends Item {
         if (player.isCrouching()) {
             this.setDiscStack(stack, ItemStack.EMPTY);
 
-            if (player.canTakeItem(discStack)) {
-                player.addItem(discStack);
-            } else {
+            if (!player.addItem(discStack)) {
                 player.drop(discStack, true);
             }
 
