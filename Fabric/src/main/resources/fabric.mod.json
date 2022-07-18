@@ -15,7 +15,7 @@
     },
   
     "license": "MIT",
-    "icon": "assets/portablejukebox/icon.png",
+    "icon": "icon.png",
   
     "environment": "*",
     "entrypoints": {
