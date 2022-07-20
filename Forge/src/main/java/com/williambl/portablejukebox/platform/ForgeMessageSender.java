@@ -3,7 +3,6 @@ package com.williambl.portablejukebox.platform;
 import com.williambl.portablejukebox.client.ClientUtils;
 import com.williambl.portablejukebox.jukebox.PortableJukeboxMessage;
 import com.williambl.portablejukebox.platform.services.IMessageSender;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -29,9 +28,9 @@ public class ForgeMessageSender implements IMessageSender {
             if (ctx.getDirection().getReceptionSide().isClient()) {
                 ctx.enqueueWork(() -> {
                     if (msg.startOrStop()) {
-                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientUtils.playDiscToPlayer(msg.entityId(), msg.disc()));
+                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientUtils.playDiscToPlayer(msg.entityId(), msg.soundEvent()));
                     } else {
-                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientUtils.stopDisc(msg.disc()));
+                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientUtils.stopDisc(msg.soundEvent()));
                     }
                 });
             }

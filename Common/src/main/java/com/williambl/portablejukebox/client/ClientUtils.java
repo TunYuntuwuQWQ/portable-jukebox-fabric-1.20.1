@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.RecordItem;
 
@@ -12,12 +13,7 @@ import java.util.Objects;
 
 public class ClientUtils {
 
-    public static void playDiscToPlayer(int entityId, int discId) {
-        Registry.ITEM.getHolder(discId).map(Holder::value).ifPresent(item -> {
-            if (!(item instanceof RecordItem disc)) {
-                return;
-            }
-
+    public static void playDiscToPlayer(int entityId, SoundEvent soundEvent) {
             var level = Minecraft.getInstance().level;
             if (level == null) {
                 return;
@@ -29,17 +25,10 @@ public class ClientUtils {
             }
 
             Minecraft.getInstance().getSoundManager().stop();
-            Minecraft.getInstance().getSoundManager().queueTickingSound(new MovingSound(entity, disc.getSound()));
-        });
+            Minecraft.getInstance().getSoundManager().queueTickingSound(new MovingSound(entity, soundEvent));
     }
 
-    public static void stopDisc(int discId) {
-        Registry.ITEM.getHolder(discId).map(Holder::value).ifPresent(item -> {
-            if (!(item instanceof RecordItem disc)) {
-                return;
-            }
-
-            Minecraft.getInstance().getSoundManager().stop(disc.getSound().getLocation(), SoundSource.NEUTRAL);
-        });
+    public static void stopDisc(SoundEvent soundEvent) {
+        Minecraft.getInstance().getSoundManager().stop(soundEvent.getLocation(), SoundSource.NEUTRAL);
     }
 }
