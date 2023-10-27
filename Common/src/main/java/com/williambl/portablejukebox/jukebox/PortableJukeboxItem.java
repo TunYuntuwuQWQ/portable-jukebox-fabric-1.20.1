@@ -40,14 +40,14 @@ public class PortableJukeboxItem extends Item {
         }
 
         if (player.isCrouching()) {
+            if (!world.isClientSide()) {
+                Services.MESSAGES.sendMessage(PortableJukeboxMessage.stop(player, DiscHelper.getSoundEvent(discStack)), player);
+            }
+
             this.setDiscStack(stack, ItemStack.EMPTY);
 
             if (!player.addItem(discStack)) {
                 player.drop(discStack, true);
-            }
-
-            if (!world.isClientSide()) {
-                Services.MESSAGES.sendMessage(PortableJukeboxMessage.stop(player, DiscHelper.getSoundEvent(discStack)), player);
             }
 
             return InteractionResultHolder.success(stack);
