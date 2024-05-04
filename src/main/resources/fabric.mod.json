@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "portablejukebox",
+	"version": "1.1",
+	"name": "Portable Jukebox",
+	"description": "Adds just the Portable Jukebox from Essential Features.",
+	"authors": [
+		"Will BL",
+		"TuYw",
+		"Tapio"
+	],
+	"license": "MIT",
+	"icon": "assets/portablejukebox/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"nya.tuyw.portablejukebox.PortableJukeboxMod"
+		],
+		"client": [
+			"nya.tuyw.portablejukebox.PortableJukeboxModClient"
+		]
+	},
+	"depends": {
+		"fabricloader": "*",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
